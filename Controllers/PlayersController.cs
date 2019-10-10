@@ -84,6 +84,12 @@ namespace gamewebapi
             return _repository.Delete(id);
         }
         
+        [HttpDelete]
+        [Route("{playerId}")]
+        public Task<Player> Ban(Guid playerId)
+        {
+            throw new NotImplementedException();
+        }
             
     }
 }

@@ -153,6 +153,15 @@ namespace gamewebapi
         
         }
 
+        public async Task<Player> Ban(Guid playerId){
+           
+            var filter = Builders<Player>.Filter.Eq(p => p.Id,playerId);
+            var update = Builders<Player>.Update.Set(p => p.IsBanned, true);
+            return await _collection.FindOneAndUpdateAsync(filter ,update);
+            
+        }
+        
+ 
         //Queries
          public async Task<Player[]> GetPlayersWithScore(int score){
             var filter = Builders<Player>.Filter.Gte(p => p.Score, score);

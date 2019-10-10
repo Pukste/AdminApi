@@ -194,7 +194,9 @@ namespace gamewebapi{
             }
             throw new NotFoundException();
         }
-
+        public Task<Player> Ban(Guid id){
+            throw new NotImplementedException();
+        }
         public Task<Player[]> GetPlayersWithScore(int score){
             throw new NotImplementedException();
         }
