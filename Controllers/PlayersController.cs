@@ -73,7 +73,7 @@ namespace gamewebapi
             //await _repository.Create(newplayer);
             return await _repository.Create(newplayer);
         }
-        [HttpPost]
+        [HttpPatch]
         [Route("{playerId}")]
         public Task<Player> Modify(Guid id, Player modifiedPlayer){
             return _repository.Modify(id, modifiedPlayer);
