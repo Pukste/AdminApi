@@ -8,6 +8,7 @@ namespace gamewebapi{
         Task<Player> Create(Player player);
         Task<Player> Modify(Guid id, Player player);
         Task<Player> Delete(Guid id);
+        Task<Player> Ban(Guid playerId);
 
         
         Task<Item> CreateItem(Guid playerId, Item item);
