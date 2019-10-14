@@ -83,6 +83,10 @@ namespace gamewebapi{
         public Task<Item> CreateItem(Guid playerId, Item item)
         {
             Task<Player> player = Get(playerId);
+            if(player.Result.IsBanned)
+            {
+                throw new UserIsBannedException();
+            }
             if(player.Result.Level < 3 && item.itemType.Equals(ItemType.Sword))
             {
                 throw new RequirementException();
@@ -109,6 +113,12 @@ namespace gamewebapi{
 
         public Task<Item> GetItem(Guid playerId, Guid itemId)
         {
+            Task<Player> playerProfile = Get(playerId);
+            if(playerProfile.Result.IsBanned)
+            {
+                throw new UserIsBannedException();
+            }
+
             string[] _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
             foreach(var player in _repository){
                 var p =JsonConvert.DeserializeObject<Player>(player);
@@ -125,6 +135,12 @@ namespace gamewebapi{
 
         public Task<Item[]> GetAllItems(Guid playerId)
         {
+            Task<Player> playerProfile = Get(playerId);
+            if(playerProfile.Result.IsBanned)
+            {
+                throw new UserIsBannedException();
+            }
+
             string[] _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
             foreach(var player in _repository){
                 var p =JsonConvert.DeserializeObject<Player>(player);
