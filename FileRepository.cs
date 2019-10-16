@@ -9,10 +9,11 @@ using System.Collections.Generic;
 namespace gamewebapi{
     public class FileRepository: IRepository{
         
+        public static string database = "game-dev.txt";
         
         public Task<Player> Get(Guid id){
             
-            string[] _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
+            string[] _repository = File.ReadAllLines(database, Encoding.Default);
             foreach(var player in _repository){
                 var p =JsonConvert.DeserializeObject<Player>(player);
                 if(p.Id == id){
@@ -22,7 +23,7 @@ namespace gamewebapi{
             throw new KeyNotFoundException();
         }
         public Task<Player[]> GetAll(){
-            string[] _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
+            string[] _repository = File.ReadAllLines(database, Encoding.Default);
             List<Player> plist = new List<Player>();
             foreach(var player in _repository){
                 plist.Add(JsonConvert.DeserializeObject<Player>(player));
@@ -31,7 +32,7 @@ namespace gamewebapi{
             return Task.FromResult(plist.ToArray());
         }
         public Task<Player> Create(Player player){
-            string[] _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
+            string[] _repository = File.ReadAllLines(database, Encoding.Default);
            // PlayerList players = JsonConvert.DeserializeObject<PlayerList>(_repository);
             var newplayer = new Player()
             {
@@ -42,18 +43,18 @@ namespace gamewebapi{
             newlist.Add(JsonConvert.SerializeObject(newplayer));
            // players.allPlayers.Add(newplayer); // heittää nullreferencen atm
             //File.AppendAllText("game_dev.txt", JsonConvert.SerializeObject(newplayer));
-            File.WriteAllLines("game_dev.txt", newlist.ToArray());
+            File.WriteAllLines(database, newlist.ToArray());
             return Task.FromResult(newplayer);
         }
         public Task<Player> Modify(Guid id, Player player){
 
-            string[] _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
+            string[] _repository = File.ReadAllLines(database, Encoding.Default);
             for(int i = 0; i<_repository.Length; i++){
                 var p =JsonConvert.DeserializeObject<Player>(_repository[i]);
                 if(p.Id == id){
                     p.Score = player.Score;
                     _repository[i] = JsonConvert.SerializeObject(p);
-                    File.WriteAllLines("game_dev.txt", _repository);
+                    File.WriteAllLines(database, _repository);
                     return Task.FromResult(p);
                 }
             }
@@ -62,7 +63,7 @@ namespace gamewebapi{
         public Task<Player> Delete(Guid id){
             Player deletedPlayer = new Player();
             List<Player> newlist = new List<Player>();
-            var _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
+            var _repository = File.ReadAllLines(database, Encoding.Default);
             for(int i = 0; i<_repository.Length; i++){
                 var p = JsonConvert.DeserializeObject<Player>(_repository[i]);
                 if(p.Id != id)
@@ -75,7 +76,7 @@ namespace gamewebapi{
             for(int i=0; i<newlist.Count; i++){
                 newarray[i] = JsonConvert.SerializeObject(newlist[i]);
             }
-            File.WriteAllLines("game_dev.txt", newarray);
+            File.WriteAllLines(database, newarray);
             return Task.FromResult(deletedPlayer);
             
         }
@@ -93,7 +94,7 @@ namespace gamewebapi{
             }
             else
             {
-                string[] _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
+                string[] _repository = File.ReadAllLines(database, Encoding.Default);
                 for(int i = 0; i<_repository.Length; i++){
                     var p =JsonConvert.DeserializeObject<Player>(_repository[i]);
                     if(p.Id == playerId){
@@ -103,7 +104,7 @@ namespace gamewebapi{
                     _repository[i] = JsonConvert.SerializeObject(p);
                     
                 }
-                File.WriteAllLines("game_dev.txt", _repository);
+                File.WriteAllLines(database, _repository);
                 return Task.FromResult(item);
             }
 
@@ -119,7 +120,7 @@ namespace gamewebapi{
                 throw new UserIsBannedException();
             }
 
-            string[] _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
+            string[] _repository = File.ReadAllLines(database, Encoding.Default);
             foreach(var player in _repository){
                 var p =JsonConvert.DeserializeObject<Player>(player);
                 if(p.Id == playerId){
@@ -141,7 +142,7 @@ namespace gamewebapi{
                 throw new UserIsBannedException();
             }
 
-            string[] _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
+            string[] _repository = File.ReadAllLines(database, Encoding.Default);
             foreach(var player in _repository){
                 var p =JsonConvert.DeserializeObject<Player>(player);
                 if(p.Id == playerId){
@@ -153,7 +154,7 @@ namespace gamewebapi{
 
         public Task<Item> UpdateItem(Guid playerId,Guid itemId, Item item)
         {
-            string[] _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
+            string[] _repository = File.ReadAllLines(database, Encoding.Default);
             for(int i = 0; i<_repository.Length; i++){
                 var p =JsonConvert.DeserializeObject<Player>(_repository[i]); 
                 if(p.Id == playerId){
@@ -161,14 +162,14 @@ namespace gamewebapi{
                         if(it.Id == itemId){
                             it.Price = item.Price;
                             _repository[i] = JsonConvert.SerializeObject(p);
-                            File.WriteAllLines("game_dev.txt", _repository);
+                            File.WriteAllLines(database, _repository);
                             return Task.FromResult(it);
                         }
                         
                     }
                 }
                 _repository[i] = JsonConvert.SerializeObject(p);
-                File.WriteAllLines("game_dev.txt", _repository);
+                File.WriteAllLines(database, _repository);
                 
             }
             
@@ -178,7 +179,7 @@ namespace gamewebapi{
 
         public Task<Item> DeleteItem(Guid playerId, Guid itemId)
         {
-            string[] _repository = File.ReadAllLines("game_dev.txt", Encoding.Default);
+            string[] _repository = File.ReadAllLines(database, Encoding.Default);
             List<Player> newlist = new List<Player>();
             foreach(var player in _repository){
                 var p =JsonConvert.DeserializeObject<Player>(player);
@@ -191,22 +192,18 @@ namespace gamewebapi{
                         if(it.Id == itemId){
                             _item = it;
                             p.Items.Remove(it);
-                            
                         }
-                        
-
                     }
                     savefile();
                     return Task.FromResult(_item);   
                 }
-                
             }
             void savefile(){
                 string[] newarray = new string[newlist.Count];
                 for(int i=0; i<newlist.Count; i++){
                     newarray[i] = JsonConvert.SerializeObject(newlist[i]);
                 }
-                File.WriteAllLines("game_dev.txt", newarray);
+                File.WriteAllLines(database, newarray);
             }
             throw new NotFoundException();
         }
