@@ -46,7 +46,7 @@ namespace gamewebapi
                 FileRepository.database = "game_prod.txt";
             }
             app.UseMiddleware<ErrorHandlingMiddleware>();
-            
+            app.UseMiddleware<AuthenticationMiddleware>();
             app.UseMvc();
         }
     }

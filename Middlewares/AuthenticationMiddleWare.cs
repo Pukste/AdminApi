@@ -23,9 +23,11 @@ namespace gamewebapi.Middlewares
             {
  
                 context.Response.StatusCode = 400;
+                await context.Response.WriteAsync("Missing ApiKey");
             }else if (!context.Request.Headers["ApiKey"].Equals(_options.ApiKey))
             {
                 context.Response.StatusCode = 401;
+                await context.Response.WriteAsync("Wrong ApiKey");
             }
             else
             {
