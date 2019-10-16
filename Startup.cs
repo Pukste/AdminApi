@@ -44,7 +44,7 @@ namespace gamewebapi
                 app.UseHsts();
             }
             app.UseMiddleware<ErrorHandlingMiddleware>();
-            
+            app.UseMiddleware<AuthenticationMiddleware>();
             app.UseMvc();
         }
     }
