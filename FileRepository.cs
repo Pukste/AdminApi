@@ -225,6 +225,9 @@ namespace gamewebapi{
         public Task<Player> IncrementPlayerScore(Guid id, int increment){
             throw new NotImplementedException();
         }
+        public Task<Player[]> GetTop_n(int amount){
+            throw new NotImplementedException();
+        }
 
     }
 }

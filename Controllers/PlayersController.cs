@@ -14,7 +14,7 @@ namespace gamewebapi
 
 
         [HttpGet]
-        [Route("{playerId:int}")]
+        [Route("{playerId}")]
         public async Task<Player> Get(Guid id){
             return await _repository.Get(id);
         }
@@ -40,6 +40,9 @@ namespace gamewebapi
         public async Task<Player> IncrementPlayerScore(Guid id, int increment){
             return await _repository.IncrementPlayerScore(id,increment);
         }
+        public async Task<Player[]> GetTop_n(int amount){
+            return await _repository.GetTop_n(amount);
+        }
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> GetAll(){
@@ -55,6 +58,10 @@ namespace gamewebapi
                 Guid id = Guid.Parse(HttpContext.Request.Query["id"]);
                 int increment = int.Parse(HttpContext.Request.Query["increment"]);
                 return Ok(await IncrementPlayerScore(id, increment));
+            }
+            if(!String.IsNullOrEmpty(HttpContext.Request.Query["GetTop"])){
+                int amount = int.Parse(HttpContext.Request.Query["GetTop"]);
+                return Ok(await GetTop_n(amount));
             }
             // en osannu kutsua itemtype, mut on se implementattu muuten :(
             return Ok(await _repository.GetAll());
@@ -84,10 +91,9 @@ namespace gamewebapi
         }
         
         [HttpDelete]
-        [Route("{playerId}")]
-        public Task<Player> Ban(Guid playerId)
-        {
-            throw new NotImplementedException();
+        [Route("ban/{playerId}")]
+        public async Task<Player> Ban(Guid playerId){
+            return await _repository.Ban(playerId);
         }
             
     }

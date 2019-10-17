@@ -81,6 +81,7 @@ namespace gamewebapi
             var filter = Builders<Player>.Filter.Eq(p => p.Id, id);
             var playerCursor = await _collection.FindAsync(filter);
             Player player = await playerCursor.FirstAsync();
+            
             return player;
         }
  
@@ -181,10 +182,10 @@ namespace gamewebapi
             return result;
         }
         // Get top 10
-        public async Task<Player[]> GetTop10(){
+        public async Task<Player[]> GetTop_n(int amount){
             var players = await GetAll();
             
-            var sorted = players.OrderByDescending(p => p.Score).Take(10).ToArray();
+            var sorted = players.OrderByDescending(p => p.Score).Take(amount).ToArray();
             return sorted;
         }
         // Get player rank

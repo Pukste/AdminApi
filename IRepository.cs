@@ -21,6 +21,7 @@ namespace gamewebapi{
         Task<Player> GetPlayerWithName(string name);
         Task<Player[]> GetPlayersWithItemType(ItemType itemType);
         Task<Player> IncrementPlayerScore(Guid id, int incement);
+        Task<Player[]> GetTop_n(int amount);
     
     }
 }
