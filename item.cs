@@ -11,6 +11,7 @@ namespace gamewebapi
 
         [Range(1,99)]
         public int Level {get; set;}
+        [Range(1,100000)]
         public int Price { get; set; }
         
         public ItemType itemType { get; set; }

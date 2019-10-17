@@ -68,6 +68,7 @@ namespace gamewebapi
         }
         [HttpPost]
         [Route("")]
+        [ExceptionFilter]
         public async Task<Player> Create(NewPlayer player){
             //_logger.LogInformation("Creating player with name " + newPlayer.Name);
             var newplayer = new Player()
@@ -76,8 +77,11 @@ namespace gamewebapi
                 Name = player.Name,
                 CreationTime = DateTime.Now
             };
+            if(this.TryValidateModel(newplayer)){
+                return await _repository.Create(newplayer);
+            }
             //await _repository.Create(newplayer);
-            return await _repository.Create(newplayer);
+            throw new Exception("Player value invalid");
         }
         [HttpPatch]
         [Route("{playerId}")]
