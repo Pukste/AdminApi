@@ -128,11 +128,6 @@ namespace gamewebapi
         // replacing the current item completely atm also not working.       
         public async Task<Item> UpdateItem(Guid id, Guid itemId, Item updateItem) 
         {
-        
-            
-            
-        
-            
             var filter = Builders<Player>.Filter.Eq(p => p.Id, id);
             var playerCursor = await _collection.FindAsync(filter);
             Player player = await playerCursor.FirstAsync();
@@ -161,7 +156,6 @@ namespace gamewebapi
             
         }
         
- 
         //Queries
          public async Task<Player[]> GetPlayersWithScore(int score){
             var filter = Builders<Player>.Filter.Gte(p => p.Score, score);
@@ -186,6 +180,19 @@ namespace gamewebapi
             var result = await _collection.FindOneAndUpdateAsync(filter,update);
             return result;
         }
+        // Get top 10
+        public async Task<Player[]> GetTop10(){
+            Task<Player[]> players = GetAll();
+            Task<Player[]> sorted = players.result.OrderByDescending(p => p.Score).Take(10);
+            return sorted;
+        }
+        // Get player rank
+        public async Task<int> GetRank(Guid id){
+            var filter = Builders<Player>.Filter.Eq(p => p.Id, id);
+            Player[] players = await GetPlayersWithScore(filter.Score);
+            return players.Length;
+        }
+
 
 
 
